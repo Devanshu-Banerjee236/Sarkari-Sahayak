@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>सरकारी सहायक (Sarkari Sahayak) - AI Citizen Welfare Copilot</title>
+  <meta name="description" content="AI-powered Indian Welfare Scheme Navigator with voice, KYC document intelligence, and multi-lingual reasoning built with Sarvam AI.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23FF9933'/><circle cx='50' cy='50' r='38' fill='%23ffffff'/><circle cx='50' cy='50' r='18' fill='%23000088'/></svg>">
+</head>
+<body class="dark-theme">
+
+  <!-- Header & Top Navigation -->
+  <header class="app-header" id="mainHeader">
+    <div class="header-container">
+      <div class="brand-group">
+        <div class="brand-emblem">
+          <div class="chakra-ring"></div>
+          <span class="emblem-symbol">🏛️</span>
+        </div>
+        <div class="brand-titles">
+          <div class="title-row">
+            <h1 class="brand-name">सरकारी सहायक</h1>
+            <span class="brand-tag">SARKARI SAHAYAK</span>
+          </div>
+          <p class="brand-subtitle">AI-Powered Citizen Welfare Copilot • Powered by Sarvam AI</p>
+        </div>
+      </div>
+
+      <!-- Controls & Status -->
+      <div class="header-controls">
+        <!-- Language Selector -->
+        <div class="control-box">
+          <label for="languageSelect" class="control-label">🌐 भाषा / Language</label>
+          <select id="languageSelect" class="custom-select" onchange="onLanguageChange(this.value)">
+            <option value="hi-IN" selected>हिन्दी (Hindi)</option>
+            <option value="en-IN">English (India)</option>
+            <option value="ta-IN">தமிழ் (Tamil)</option>
+            <option value="te-IN">తెలుగు (Telugu)</option>
+            <option value="bn-IN">বাংলা (Bengali)</option>
+            <option value="mr-IN">मराठी (Marathi)</option>
+            <option value="gu-IN">ગુજરાતી (Gujarati)</option>
+          </select>
+        </div>
+
+        <!-- Voice Speaker Selector -->
+        <div class="control-box">
+          <label for="speakerSelect" class="control-label">🎙️ Bulbul Voice</label>
+          <select id="speakerSelect" class="custom-select" onchange="onSpeakerChange(this.value)">
+            <option value="shubh" selected>Shubh (शुभ - स्पष्ट)</option>
+            <option value="ritu">Ritu (रितु - मधुर)</option>
+            <option value="priya">Priya (प्रिया - सौम्य)</option>
+            <option value="aditya">Aditya (आदित्य)</option>
+            <option value="roopa">Roopa (रूपा)</option>
+          </select>
+        </div>
+
+        <!-- API Key Status Pill -->
+        <button id="apiKeyModalBtn" class="api-status-badge" onclick="openApiKeyModal()" title="Configure Sarvam AI Subscription Key">
+          <span class="status-indicator" id="apiKeyStatusDot"></span>
+          <span id="apiKeyStatusText">Sarvam API: Demo Mode</span>
+          <span class="status-gear">⚙️</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs-bar" id="appNavigation">
+      <div class="tabs-container">
+        <button class="nav-tab active" data-target="voiceAssistantSection" onclick="switchTab('voiceAssistantSection', this)">
+          <span class="tab-icon">🎙️</span>
+          <span class="tab-label">आवाज़ से सहायता (Voice Copilot)</span>
+        </button>
+        <button class="nav-tab" data-target="schemeCompassSection" onclick="switchTab('schemeCompassSection', this)">
+          <span class="tab-icon">🧭</span>
+          <span class="tab-label">योजना खोज (Scheme Compass)</span>
+        </button>
+        <button class="nav-tab" data-target="kycDeskSection" onclick="switchTab('kycDeskSection', this)">
+          <span class="tab-icon">📄</span>
+          <span class="tab-label">दस्तावेज़ सत्यापन (KYC Vision Desk)</span>
+        </button>
+        <button class="nav-tab" data-target="applicationDocketSection" onclick="switchTab('applicationDocketSection', this)">
+          <span class="tab-icon">📝</span>
+          <span class="tab-label">आवेदन डॉकेट (Application Dossier)</span>
+        </button>
+        <button class="nav-tab" data-target="telemetrySection" onclick="switchTab('telemetrySection', this)">
+          <span class="tab-icon">⚡</span>
+          <span class="tab-label">Sarvam AI Telemetry</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="main-wrapper">
+
+    <!-- Hero Announcement & Scenario Quick-Launcher -->
+    <section class="hero-card" id="heroBanner">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          <span>100% Indian Languages • Voice-First • Multimodal Document Intelligence</span>
+        </div>
+        <h2 class="hero-headline">
+          हर भारतीय नागरिक तक <span class="highlight-gradient">सरकारी योजनाओं का सीधा लाभ</span>
+        </h2>
+        <p class="hero-description">
+          भाषा और डिजिटल बाधाओं को दूर करें। सर्वम एआई (Sarvam AI) के <strong>Saaras v4 (STT)</strong>, 
+          <strong>Bulbul v3 (TTS)</strong>, <strong>Sarvam-105B</strong> और <strong>Sarvam Vision</strong> 
+          की मदद से सिर्फ बोलकर या दस्तावेज़ दिखाकर अपनी पात्रता जानें और तुरंत आवेदन करें।
+        </p>
+
+        <!-- Quick Scenario Buttons -->
+        <div class="scenario-ribbon">
+          <span class="scenario-label">⚡ त्वरित टेस्ट केस / Quick Scenarios:</span>
+          <div class="scenario-pills">
+            <button class="scenario-btn" onclick="loadScenario('farmer')" title="Test small farmer with 1.8 acres land">
+              🌾 किसान (1.8 एकड़ - PM KISAN)
+            </button>
+            <button class="scenario-btn" onclick="loadScenario('vendor')" title="Test street vendor needing loan">
+              🛒 रेहड़ी विक्रेता (PM SVANidhi)
+            </button>
+            <button class="scenario-btn" onclick="loadScenario('daughter')" title="Test parent with 8yo daughter">
+              👧 सुकन्या समृद्धि (SSY)
+            </button>
+            <button class="scenario-btn" onclick="loadScenario('artisan')" title="Test traditional artisan / carpenter">
+              🔨 शिल्पकार (PM Vishwakarma)
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image-wrap">
+        <img src="/static/images/hero.jpg" alt="Sarkari Sahayak Sarvam AI Banner" class="hero-img">
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 1: VOICE COPILOT (आवाज़ से सहायता) -->
+    <!-- ================================================================= -->
+    <section class="content-section active-section" id="voiceAssistantSection">
+      <div class="section-grid voice-layout">
+        
+        <!-- Left: Live Microphone & Speech Controls -->
+        <div class="glass-panel voice-control-card">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <span class="title-icon">🎙️</span>
+              आवाज़ रिकॉर्डिंग / Voice Input
+            </h3>
+            <span class="engine-badge" id="sttEngineBadge">Saaras v4 STT</span>
+          </div>
+
+          <p class="panel-desc">
+            माइक्रोफ़ोन पर क्लिक करके अपनी भाषा में बोलें, या नीचे दिए गए त्वरित ऑडियो बटनों का उपयोग करें।
+          </p>
+
+          <!-- Waveform Visualizer & Mic Button -->
+          <div class="mic-stage">
+            <div class="visualizer-container">
+              <canvas id="waveformCanvas" width="360" height="70"></canvas>
+            </div>
+
+            <div class="mic-button-wrapper">
+              <button id="recordMicBtn" class="mic-btn pulse-idle" onclick="toggleMicrophoneRecording()" title="Click to start/stop speaking">
+                <span class="mic-icon" id="micIconSymbol">🎙️</span>
+                <span class="mic-label" id="micBtnLabel">बोलने के लिए दबाएं (Tap to Speak)</span>
+              </button>
+            </div>
+
+            <div id="recordingTimer" class="recording-timer hidden">00:00</div>
+          </div>
+
+          <!-- Quick Spoken Samples (One click prompts in Indian Languages) -->
+          <div class="sample-prompts-group">
+            <span class="sub-label">💡 बोलकर पूछने के उदाहरण (Click to Simulate Voice):</span>
+            <div class="prompt-chips">
+              <button class="prompt-chip" onclick="simulateVoiceQuery('hi-farmer')">
+                🗣️ "मैं 2 एकड़ जमीन का किसान हूँ, मुझे क्या योजना मिलेगी?" (Hindi)
+              </button>
+              <button class="prompt-chip" onclick="simulateVoiceQuery('en-vendor')">
+                🗣️ "I am a street vendor in Delhi needing working capital." (English)
+              </button>
+              <button class="prompt-chip" onclick="simulateVoiceQuery('ta-health')">
+                🗣️ "நான் குடும்பத்திற்கு இலவச மருத்துவ காப்பீடு பெற முடியுமா?" (Tamil)
+              </button>
+              <button class="prompt-chip" onclick="simulateVoiceQuery('te-pension')">
+                🗣️ "వృద్ధాప్య పెన్షన్ మరియు సహాయం కోసం వివరాలు కావాలి." (Telugu)
+              </button>
+            </div>
+          </div>
+
+          <!-- Audio File Upload Option -->
+          <div class="audio-upload-bar">
+            <label for="audioFileInput" class="upload-link-btn">
+              📁 ऑडियो फ़ाइल अपलोड करें (Upload WAV/MP3)
+            </label>
+            <input type="file" id="audioFileInput" accept="audio/*" onchange="handleAudioFileUpload(event)" class="hidden-input">
+            <span id="uploadedAudioName" class="file-name-label"></span>
+          </div>
+        </div>
+
+        <!-- Right: Conversational Stream & Bulbul Audio Output -->
+        <div class="glass-panel conversation-card">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <span class="title-icon">💬</span>
+              सहकारी संवाद / AI Dialogue
+            </h3>
+            <div class="panel-actions">
+              <button class="tiny-btn" onclick="clearConversation()">
+                🗑️ रीसेट (Reset)
+              </button>
+            </div>
+          </div>
+
+          <!-- Live Chat Stream -->
+          <div class="chat-feed" id="chatFeed">
+            <div class="chat-msg assistant-msg">
+              <div class="msg-avatar">🏛️</div>
+              <div class="msg-body">
+                <div class="msg-header">
+                  <strong>सरकारी सहायक</strong>
+                  <span class="msg-time">अभी</span>
+                </div>
+                <div class="msg-text">
+                  नमस्ते! मैं सर्वम एआई (Sarvam AI) द्वारा संचालित आपका व्यक्तिगत सरकारी योजना सहायक हूँ।
+                  <br><br>
+                  आप बोलकर पूछ सकते हैं—अपनी खेती, व्यवसाय, पेंशन, या स्वास्थ्य बीमा संबंधी किसी भी सरकारी योजना के बारे में। 
+                  आपकी सेवा में सदैव तत्पर!
+                </div>
+                <div class="msg-tools">
+                  <button class="tts-play-btn" onclick="playCurrentGreeting()">
+                    🔊 सुनें (Listen via Bulbul)
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Input fallback -->
+          <div class="chat-input-bar">
+            <input type="text" id="chatTextInput" placeholder="या यहाँ लिखकर पूछें... (Type message here)" onkeydown="if(event.key==='Enter') sendTextMessage()">
+            <button id="sendTextBtn" class="send-btn" onclick="sendTextMessage()">
+              भेजें ➤
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 2: SCHEME COMPASS (योजना खोज व पात्रता) -->
+    <!-- ================================================================= -->
+    <section class="content-section" id="schemeCompassSection">
+      <div class="compass-layout">
+        
+        <!-- Left: Filter & Profile Builder -->
+        <div class="glass-panel profile-builder-card">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <span class="title-icon">👤</span>
+              नागरिक प्रोफाइल (Citizen Profile)
+            </h3>
+            <button class="tiny-btn" onclick="resetProfileForm()">🔄 रीसेट</button>
+          </div>
+
+          <form id="profileForm" onsubmit="event.preventDefault(); runEligibilityMatcher();">
+            <div class="form-grid">
+              
+              <div class="input-field">
+                <label for="profOccupation">व्यवसाय / Occupation</label>
+                <select id="profOccupation" class="form-input" onchange="runEligibilityMatcher()">
+                  <option value="farmer">किसान (Farmer / Cultivator)</option>
+                  <option value="street vendor">रेहड़ी-पटरी विक्रेता (Street Vendor / Hawker)</option>
+                  <option value="artisan">कारीगर / शिल्पकार (Artisan / Craftsman)</option>
+                  <option value="daily wage worker">श्रमिक / मजदूर (Daily Wage Worker / Laborer)</option>
+                  <option value="shopkeeper">दुकानदार / छोटा व्यापारी (Small Business / Shop)</option>
+                  <option value="women shg member">स्वयं सहायता समूह सदस्य (SHG Woman Member)</option>
+                  <option value="unemployed">बेरोजगार / विद्यार्थी (Unemployed / Student)</option>
+                </select>
+              </div>
+
+              <div class="input-field">
+                <label for="profIncome">वार्षिक आय / Annual Income (₹)</label>
+                <div class="range-wrap">
+                  <input type="range" id="profIncome" min="20000" max="600000" step="10000" value="80000" oninput="updateIncomeLabel(this.value)">
+                  <span id="incomeDisplayVal" class="range-val">₹80,000 / वर्ष</span>
+                </div>
+              </div>
+
+              <div class="input-field">
+                <label for="profLand">कृषि भूमि / Landholding (Acres)</label>
+                <div class="range-wrap">
+                  <input type="range" id="profLand" min="0" max="15" step="0.2" value="1.8" oninput="updateLandLabel(this.value)">
+                  <span id="landDisplayVal" class="range-val">1.8 Acres</span>
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="input-field">
+                  <label for="profAge">आयु / Age</label>
+                  <input type="number" id="profAge" class="form-input" min="1" max="100" value="38" onchange="runEligibilityMatcher()">
+                </div>
+                <div class="input-field">
+                  <label for="profGender">लिंग / Gender</label>
+                  <select id="profGender" class="form-input" onchange="runEligibilityMatcher()">
+                    <option value="male">पुरुष (Male)</option>
+                    <option value="female">महिला (Female)</option>
+                    <option value="other">अन्य (Other)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="input-field">
+                  <label for="profArea">क्षेत्र / Area</label>
+                  <select id="profArea" class="form-input" onchange="runEligibilityMatcher()">
+                    <option value="rural">ग्रामीण (Rural)</option>
+                    <option value="urban">शहरी (Urban)</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="profState">राज्य / State</label>
+                  <select id="profState" class="form-input">
+                    <option value="Uttar Pradesh">उत्तर प्रदेश (Uttar Pradesh)</option>
+                    <option value="Madhya Pradesh">मध्य प्रदेश (Madhya Pradesh)</option>
+                    <option value="Bihar">बिहार (Bihar)</option>
+                    <option value="Maharashtra">महाराष्ट्र (Maharashtra)</option>
+                    <option value="Tamil Nadu">तमिलनाडु (Tamil Nadu)</option>
+                    <option value="Delhi">दिल्ली (Delhi NCT)</option>
+                    <option value="West Bengal">पश्चिम बंगाल (West Bengal)</option>
+                    <option value="Gujarat">गुजरात (Gujarat)</option>
+                    <option value="All">अन्य सभी राज्य (All India)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Extra checks -->
+              <div class="checkbox-group">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="profGirlChild" onchange="toggleGirlChildField(this.checked)">
+                  <span class="checkmark"></span>
+                  <span>10 वर्ष से कम आयु की बालिका (Girl child under 10)</span>
+                </label>
+                <div id="girlAgeWrap" class="hidden-field">
+                  <label for="profGirlAge">बेटी की आयु (वर्ष):</label>
+                  <input type="number" id="profGirlAge" min="0" max="10" value="6" class="form-input-sm" onchange="runEligibilityMatcher()">
+                </div>
+
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="profShg" onchange="runEligibilityMatcher()">
+                  <span class="checkmark"></span>
+                  <span>महिला स्वयं सहायता समूह (SHG) सदस्य</span>
+                </label>
+              </div>
+
+              <button type="button" class="primary-action-btn" onclick="runEligibilityMatcher()">
+                🔍 पात्रता जांचें (Check Eligibility with Sarvam AI)
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right: Matched Schemes Feed -->
+        <div class="glass-panel schemes-results-card">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <span class="title-icon">🏆</span>
+              आपकी पात्र योजनाएं / Matched Welfare Schemes
+            </h3>
+            <span class="badge-count" id="matchedCountBadge">10 योजनाएं</span>
+          </div>
+
+          <div class="schemes-list-container" id="schemesList">
+            <!-- Dynamic Scheme Cards Injected Here -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 3: KYC VISION DESK (दस्तावेज़ सत्यापन) -->
+    <!-- ================================================================= -->
+    <section class="content-section" id="kycDeskSection">
+      <div class="kyc-grid">
+        
+        <!-- Document Upload & Sample Selector -->
+        <div class="glass-panel kyc-upload-card">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <span class="title-icon">📷</span>
+              दस्तावेज़ अपलोड / Sarvam Vision Scan
+            </h3>
+            <span class="engine-badge">Sarvam Vision Doc AI</span>
+          </div>
+
+          <p class="panel-desc">
+            आधार कार्ड, खसरा-खतौनी, आय प्रमाण पत्र या वेंडर कार्ड अपलोड करें। 
+            सर्वम विज़न एआई दस्तावेज़ से डेटा निकालेगा और धोखाधड़ी व पात्रता की जांच करेगा।
+          </p>
+
+          <!-- One click sample documents -->
+          <div class="sample-docs-panel">
+            <span class="sub-label">⚡ त्वरित टेस्ट दस्तावेज़ (Click Sample to Test Instantly):</span>
+            <div class="sample-doc-buttons">
+              <button class="sample-doc-btn active" id="sampleKisanBtn" onclick="selectSampleDocument('kisan')">
+                <span class="doc-icon">🌾</span>
+                <div class="doc-meta">
+                  <strong>कृषक पहचान व खतौनी प्रमाणपत्र</strong>
+                  <small>Ramesh Kumar Sharma • 1.8 Acres</small>
+                </div>
+              </button>
+
+              <button class="sample-doc-btn" id="sampleVendorBtn" onclick="selectSampleDocument('vendor')">
+                <span class="doc-icon">🛒</span>
+                <div class="doc-meta">
+                  <strong>शहरी स्ट्रीट वेंडर विक्रय पहचान पत्र</strong>
+                  <small>Sunita Devi • Delhi Municipal Livelihood</small>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Document Upload Dropzone -->
+          <div class="upload-dropzone" id="docDropzone" onclick="document.getElementById('kycDocFileInput').click()">
+            <input type="file" id="kycDocFileInput" accept="image/*,.pdf" onchange="handleKycFileUpload(event)" class="hidden-input">
+            <div class="dropzone-content">
+              <span class="upload-cloud-icon">📄</span>
+              <p class="dropzone-text"><strong>फ़ोटो या पीडीएफ यहाँ अपलोड करें</strong></p>
+              <p class="dropzone-hint">JPG, PNG, PDF (Sarvam Vision Multilingual OCR)</p>
+            </div>
+          </div>
+
+          <!-- Document Image Viewer -->
+          <div class="doc-preview-wrapper" id="docPreviewWrap">
+            <div class="preview-header">
+              <span>दस्तावेज़ पूर्वावलोकन (Document Preview)</span>
+              <span id="docFilenameBadge" class="doc-badge">sample_kisan.jpg</span>
+            </div>
+            <img id="docPreviewImg" src="/static/images/sample_kisan.jpg" alt="KYC Document Preview" class="doc-preview-img">
+          </div>
+
+          <button id="runOcrBtn" class="primary-action-btn mt-4" onclick="processSelectedDocument()">
+            ⚡ सर्वम विज़न से सत्यापित करें (Extract & Verify via Sarvam Vision)
+          </button>
+        </div>
+
+        <!-- Extraction Results & Compliance Report -->
+        <div class="glass-panel kyc-results-card">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <span class="title-icon">✅</span>
+              सर्वम विज़न विश्लेषण (Vision Extraction & Integrity)
+            </h3>
+            <span id="verificationStatusBadge" class="status-verified-badge">VERIFIED</span>
+          </div>
+
+          <div id="kycResultsLoading" class="loader-state hidden">
+            <div class="spinner"></div>
+            <p>सर्वम विज़न एआई दस्तावेज़ की जांच कर रहा है...</p>
+          </div>
+
+          <div id="kycResultsContent" class="extracted-details-wrap">
+            <!-- Results filled by JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 4: APPLICATION DOCKET (आवेदन पत्र व डॉकेट) -->
+    <!-- ================================================================= -->
+    <section class="content-section" id="applicationDocketSection">
+      <div class="docket-layout">
+        
+        <!-- Left: Pre-Filled Application Form -->
+        <div class="glass-panel docket-form-card">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <span class="title-icon">📋</span>
+              आवेदन विवरण (Application Details)
+            </h3>
+            <button class="tiny-btn" onclick="autoFillFormFromExtractedData()">
+              🪄 विज़न डेटा से भरें (Auto-Fill)
+            </button>
+          </div>
+
+          <form id="docketForm" onsubmit="event.preventDefault(); generateOfficialDocket();">
+            <div class="form-grid">
+              
+              <div class="input-field">
+                <label for="formTargetScheme">लक्षित सरकारी योजना (Selected Welfare Scheme)</label>
+                <select id="formTargetScheme" class="form-input">
+                  <option value="pm-kisan" selected>PM-KISAN (प्रधानमंत्री किसान सम्मान निधि - ₹6,000/वर्ष)</option>
+                  <option value="ayushman-bharat">आयुष्मान भारत PM-JAY (₹5,00,000 मुफ्त स्वास्थ्य कवर)</option>
+                  <option value="pm-svanidhi">पीएम स्वनिधि (स्ट्रीट वेंडर कार्यशील पूंजी ऋण - ₹10,000 - ₹50,000)</option>
+                  <option value="pm-vishwakarma">पीएम विश्वकर्मा योजना (₹15,000 टूलकिट + ₹3 लाख लोन)</option>
+                  <option value="sukanya-samriddhi">सुकन्या समृद्धि योजना (8.2% ब्याज दर बालिका बचत)</option>
+                  <option value="atal-pension">अटल पेंशन योजना (₹1,000 - ₹5,000 मासिक पेंशन)</option>
+                  <option value="pm-awas-gramin">प्रधानमंत्री आवास योजना - ग्रामीण (₹1.3 लाख पक्का मकान)</option>
+                  <option value="pm-mudra">प्रधानमंत्री मुद्रा योजना (माइक्रो बिजनेस लोन)</option>
+                </select>
+              </div>
+
+              <div class="input-field">
+                <label for="formApplicantName">
+                  आवेदक का पूरा नाम (Full Name)
+                  <button type="button" class="sound-helper-btn" onclick="speakField('नाम', document.getElementById('formApplicantName').value)" title="Speak with Bulbul">🔊</button>
+                </label>
+                <input type="text" id="formApplicantName" class="form-input" value="Ramesh Kumar Sharma (रमेश कुमार शर्मा)">
+              </div>
+
+              <div class="form-row-2">
+                <div class="input-field">
+                  <label for="formAadhaar">
+                    आधार संख्या (Aadhaar No)
+                    <button type="button" class="sound-helper-btn" onclick="speakField('आधार संख्या', document.getElementById('formAadhaar').value)">🔊</button>
+                  </label>
+                  <input type="text" id="formAadhaar" class="form-input" value="XXXX-XXXX-4821">
+                </div>
+                <div class="input-field">
+                  <label for="formMobile">
+                    मोबाइल नंबर (Mobile No)
+                    <button type="button" class="sound-helper-btn" onclick="speakField('मोबाइल नंबर', document.getElementById('formMobile').value)">🔊</button>
+                  </label>
+                  <input type="text" id="formMobile" class="form-input" value="+91 98409 50950">
+                </div>
+              </div>
+
+              <div class="input-field">
+                <label for="formAddress">
+                  स्थायी पता (Permanent Address)
+                  <button type="button" class="sound-helper-btn" onclick="speakField('स्थायी पता', document.getElementById('formAddress').value)">🔊</button>
+                </label>
+                <input type="text" id="formAddress" class="form-input" value="Village: Gangapur, Post: Phulpur, District: Varanasi, Uttar Pradesh - 221006">
+              </div>
+
+              <div class="form-row-2">
+                <div class="input-field">
+                  <label for="formOccupation">व्यवसाय (Occupation)</label>
+                  <input type="text" id="formOccupation" class="form-input" value="Small & Marginal Farmer (कृषक)">
+                </div>
+                <div class="input-field">
+                  <label for="formIncome">वार्षिक आय (Annual Income)</label>
+                  <input type="text" id="formIncome" class="form-input" value="₹78,000">
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="input-field">
+                  <label for="formLand">भूमि विवरण (Landholding)</label>
+                  <input type="text" id="formLand" class="form-input" value="1.8 Acres (Khasra 121/1, 122/2)">
+                </div>
+                <div class="input-field">
+                  <label for="formBank">डीबीटी बैंक खाता (Aadhaar Seeded Bank)</label>
+                  <input type="text" id="formBank" class="form-input" value="State Bank of India (DBT Active)">
+                </div>
+              </div>
+
+              <button type="button" class="primary-action-btn" onclick="generateOfficialDocket()">
+                📄 आधिकारिक आवेदन डॉकेट तैयार करें (Generate Verified Docket)
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right: Official Verified Docket Preview with QR Code -->
+        <div class="glass-panel docket-preview-card" id="docketPrintArea">
+          <div class="docket-paper" id="docketPaper">
+            
+            <div class="docket-header">
+              <div class="gov-seal">
+                <span>भारत सरकार • GOVERNMENT OF INDIA</span>
+                <h3>प्रत्यक्ष लाभ अंतरण (DBT) आवेदन डॉकेट</h3>
+                <p>Direct Benefit Transfer • AI Verified Application Dossier</p>
+              </div>
+              <div class="docket-meta-block">
+                <div class="qr-placeholder" id="docketQrCode">
+                  <!-- QR SVG -->
+                  <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+                    <rect width="100" height="100" fill="#ffffff" rx="4"/>
+                    <rect x="8" y="8" width="28" height="28" fill="#111827"/>
+                    <rect x="14" y="14" width="16" height="16" fill="#ffffff"/>
+                    <rect x="18" y="18" width="8" height="8" fill="#111827"/>
+                    <rect x="64" y="8" width="28" height="28" fill="#111827"/>
+                    <rect x="70" y="14" width="16" height="16" fill="#ffffff"/>
+                    <rect x="74" y="18" width="8" height="8" fill="#111827"/>
+                    <rect x="8" y="64" width="28" height="28" fill="#111827"/>
+                    <rect x="14" y="70" width="16" height="16" fill="#ffffff"/>
+                    <rect x="18" y="74" width="8" height="8" fill="#111827"/>
+                    <rect x="42" y="10" width="16" height="8" fill="#111827"/>
+                    <rect x="42" y="24" width="8" height="18" fill="#111827"/>
+                    <rect x="54" y="32" width="14" height="8" fill="#111827"/>
+                    <rect x="42" y="48" width="16" height="16" fill="#111827"/>
+                    <rect x="64" y="64" width="12" height="12" fill="#111827"/>
+                    <rect x="80" y="76" width="12" height="16" fill="#111827"/>
+                  </svg>
+                </div>
+                <div class="tracking-wrap">
+                  <span class="tracking-label">ट्रैकिंग संख्या / Docket ID</span>
+                  <strong id="docketTrackingId">SAHAYAK-20261012-K78B2A</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="docket-status-banner">
+              <span class="stamp-icon">🛡️</span>
+              <div>
+                <strong>सर्वम विज़न व सर्वम-105B द्वारा सत्यापित (AI KYC VERIFIED)</strong>
+                <p>दस्तावेज़ की प्रामाणिकता और पात्रता की AI पुष्टि की गई है।</p>
+              </div>
+            </div>
+
+            <!-- Docket Body Details -->
+            <div class="docket-details" id="docketDetailsContent">
+              <div class="docket-row">
+                <span class="d-label">योजना (Scheme):</span>
+                <span class="d-val" id="docketSchemeTitle">PM-KISAN (प्रधानमंत्री किसान सम्मान निधि)</span>
+              </div>
+              <div class="docket-row">
+                <span class="d-label">वार्षिक वित्तीय लाभ (Benefit):</span>
+                <span class="d-val highlight-val" id="docketBenefit">₹6,000 / वर्ष (₹2,000 की 3 किस्तें)</span>
+              </div>
+              <div class="docket-row">
+                <span class="d-label">आवेदक का नाम (Beneficiary):</span>
+                <span class="d-val" id="docketApplicant">Ramesh Kumar Sharma (रमेश कुमार शर्मा)</span>
+              </div>
+              <div class="docket-row">
+                <span class="d-label">आधार नंबर (Aadhaar):</span>
+                <span class="d-val" id="docketAadhaar">XXXX-XXXX-4821</span>
+              </div>
+              <div class="docket-row">
+                <span class="d-label">पता (Address):</span>
+                <span class="d-val" id="docketAddress">Village: Gangapur, Post: Phulpur, District: Varanasi, UP</span>
+              </div>
+              <div class="docket-row">
+                <span class="d-label">सत्यापित संलग्न दस्तावेज़:</span>
+                <span class="d-val" id="docketDocs">आधार कार्ड, खसरा-खतौनी नकल, बैंक पासबुक (DBT Active)</span>
+              </div>
+            </div>
+
+            <!-- Spoken Review CTA -->
+            <div class="docket-audio-review">
+              <button class="docket-listen-btn" onclick="listenFullDocketAudio()">
+                🔊 पूरा आवेदन बुलबुल आवाज़ में सुनें (Listen Full Docket via Bulbul)
+              </button>
+              <button class="docket-print-btn" onclick="printDocket()">
+                🖨️ डॉकेट प्रिंट / सेव करें (Print Docket)
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 5: SARVAM AI TELEMETRY & ARCHITECTURE -->
+    <!-- ================================================================= -->
+    <section class="content-section" id="telemetrySection">
+      <div class="telemetry-grid">
+        
+        <!-- Architecture Diagram Card -->
+        <div class="glass-panel architecture-card">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <span class="title-icon">🏛️</span>
+              सर्वम एआई सिस्टम आर्किटेक्चर (Sarvam Multimodal Pipeline)
+            </h3>
+            <span class="engine-badge">End-to-End Indic AI</span>
+          </div>
+
+          <div class="arch-flow">
+            <div class="flow-step">
+              <div class="step-num">1</div>
+              <div class="step-card">
+                <strong>🎙️ Saaras v4</strong>
+                <p>Speech-to-Text</p>
+                <small>22 Indian Languages + Code-Mixed audio input</small>
+              </div>
+            </div>
+
+            <div class="flow-arrow">➔</div>
+
+            <div class="flow-step">
+              <div class="step-num">2</div>
+              <div class="step-card">
+                <strong>🧠 Sarvam-105B</strong>
+                <p>Indic LLM & Reasoning</p>
+                <small>Scheme RAG, Multi-factor Eligibility & Dialogue</small>
+              </div>
+            </div>
+
+            <div class="flow-arrow">➔</div>
+
+            <div class="flow-step">
+              <div class="step-num">3</div>
+              <div class="step-card">
+                <strong>🌐 Mayura v1</strong>
+                <p>Translation</p>
+                <small>Cross-lingual translation across Indic scripts</small>
+              </div>
+            </div>
+
+            <div class="flow-arrow">➔</div>
+
+            <div class="flow-step">
+              <div class="step-num">4</div>
+              <div class="step-card">
+                <strong>🔊 Bulbul v3 / v4</strong>
+                <p>Text-to-Speech</p>
+                <small>Natural, expressive regional voice audio</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-parallel-branch">
+            <div class="branch-card">
+              <div class="branch-icon">📄</div>
+              <div>
+                <strong>Sarvam Vision Doc AI Engine</strong>
+                <p>Multilingual OCR, Aadhaar/Kisan/Vendor card field extraction & tamper check</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Telemetry Monitor -->
+        <div class="glass-panel telemetry-card">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <span class="title-icon">📊</span>
+              लाइव एपीआई मेट्रिक्स (Live Telemetry & Diagnostics)
+            </h3>
+            <span class="status-indicator-live">Live Active</span>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <span class="m-label">STT Latency (Saaras)</span>
+              <strong class="m-val" id="metricSttLatency">~340 ms</strong>
+            </div>
+            <div class="metric-box">
+              <span class="m-label">TTS Latency (Bulbul)</span>
+              <strong class="m-val" id="metricTtsLatency">~280 ms</strong>
+            </div>
+            <div class="metric-box">
+              <span class="m-label">LLM Latency (Sarvam-105B)</span>
+              <strong class="m-val" id="metricLlmLatency">~620 ms</strong>
+            </div>
+            <div class="metric-box">
+              <span class="m-label">Doc AI OCR (Vision)</span>
+              <strong class="m-val" id="metricVisionLatency">~850 ms</strong>
+            </div>
+          </div>
+
+          <div class="console-box">
+            <div class="console-header">
+              <span>Sarvam API Request / Response Log</span>
+              <button class="tiny-btn" onclick="clearConsoleLog()">साफ़ करें</button>
+            </div>
+            <pre id="apiConsoleOutput" class="console-log">[INIT] Sarkari Sahayak application initialized.
+[CONFIG] Sarvam AI endpoint bindings ready (Saaras, Bulbul, Sarvam-105B, Mayura, Vision).
+[INFO] Ready for voice recording, document scanning, and scheme consultation.</pre>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Global Audio Player for Bulbul Speech -->
+  <audio id="globalAudioPlayer" class="hidden"></audio>
+
+  <!-- Modal: Configure Sarvam API Key -->
+  <div id="apiKeyModal" class="modal-overlay hidden">
+    <div class="modal-content glass-panel">
+      <div class="modal-header">
+        <h3>⚙️ Sarvam AI Subscription Key</h3>
+        <button class="modal-close-btn" onclick="closeApiKeyModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>
+          अपनी सर्वम एआई कुंजी (Sarvam API Subscription Key) दर्ज करें। 
+          यह आपके <strong>Saaras v4, Bulbul v3/v4, Sarvam-105B, Mayura</strong> 
+          और <strong>Sarvam Vision</strong> के सीधे लाइव एंडपॉइंट्स को सक्रिय कर देगा।
+        </p>
+        <div class="input-field mt-3">
+          <label for="apiKeyInput">API Subscription Key (sk_... या key):</label>
+          <input type="password" id="apiKeyInput" class="form-input" placeholder="e.g. 5f83b2... या आपकी Sarvam API Key">
+        </div>
+        <div class="modal-info-box">
+          <small>🔑 कुंजी आपके स्थानीय सत्र में सुरक्षित रहेगी और <code>.env</code> फ़ाइल में सहेजी जाएगी। कुंजी न होने पर सिस्टम स्वचालित स्मार्ट सिमुलेटर पर चलेगा।</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn" onclick="closeApiKeyModal()">रद्द करें (Cancel)</button>
+        <button class="primary-btn" onclick="saveApiKey()">सहेजें और सक्रिय करें (Save & Activate)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
