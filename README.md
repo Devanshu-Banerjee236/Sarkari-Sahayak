@@ -106,6 +106,10 @@ Open your browser at: **`http://127.0.0.1:8001`**
 ```
 
 ---
+How It Was Built
+* **Development Approach:** This project was conceptualized, designed, and structured using AI-assisted development (via **Anti-Gravity**), leveraging prompt engineering and rapid prototyping.
+* **Core Integration:** Built using the **Sarvam API** to fetch and process service data.
+* **My Role:** As the project lead/creator, I managed the end-to-end concept, directed the architecture through prompts, handled debugging, and integrated the final fixes to successfully deploy and run the app locally.
 
 ## 🇮🇳 Hackathon Pitch Highlight
 > *"Sarkari Sahayak doesn't just translate forms — it dismantles the literacy barrier through vernacular voice and computer vision. With Sarvam AI, any Indian citizen, from a marginal farmer in Varanasi to a street vendor in Delhi, can walk up, speak in their dialect, show their document to their phone camera, and receive a verified government welfare application in under 60 seconds."*
